@@ -22,7 +22,11 @@ class LoginController extends Controller
     
         $user = User::where('email', $request->email)->first();
 
-       
+        if (! $user || ! Hash::check($request->password, $user->password)) {
+            throw ValidationException::withMessages([
+                'email' => ['The provided credentials are incorrect.'],
+            ]);
+        }
     
         $token = $user->createToken('token-login');
         return response()->json(['token' => $token->plainTextToken]);
