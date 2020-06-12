@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 use App\User;
+use App\Note;
+use App\PersonalAccessToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Artisan;
@@ -34,9 +36,10 @@ class LoginController extends Controller
 
     public function reset(Request $request)
     {
-        Artisan::call("migrate:refresh", ["--force" => true]);
-       
-        return response()->json(['message' => 'Reset All']);
+        User::whereNotNull('id')->delete();
+        Note::whereNotNull('id')->delete();
+        PersonalAccessToken::whereNotNull('id')->delete();
+       return response('http 200', 200);
         
     }
 }
